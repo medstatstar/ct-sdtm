@@ -112,7 +112,13 @@
 > 帮我把 data/raw 目录下的临床试验原始数据映射成 SDTM 标准数据集。
 
 **助手会这样回（示意）：**
-> 已读取 data/raw，识别到 5 个域（DM / AE / LB / VS / EX），写出 sdtm_dm.csv（12 受试者）、sdtm_ae.csv（38 条不良事件）、sdtm_lb.csv（156 条）、sdtm_vs.csv（84 条）、sdtm_ex.csv（60 条）。映射期自动完成三件事：① 值级路由补全单位（如 VSTESTCD=DIABP → VSSTRESU=mmHg）；② 逐变量记录映射证据链（来源列 + 规则编号）；③ 跑合规规则集，共 2 个 issue。无 Error，可直接交付下游 ct-adam。
+> 已读取 data/raw，识别到 5 个域（DM / AE / LB / VS / EX），写出 sdtm_dm.csv（12 受试者）、sdtm_ae.csv（38 条不良事件）、sdtm_lb.csv（156 条）、sdtm_vs.csv（84 条）、sdtm_ex.csv（60 条）。映射期自动完成三件事：
+>
+> 1. 值级路由补全单位（如 VSTESTCD=DIABP → VSSTRESU=mmHg）；
+> 2. 逐变量记录映射证据链（来源列 + 规则编号）；
+> 3. 跑合规规则集，共 2 个 issue。
+>
+> 无 Error，可直接交付下游 ct-adam。
 
 **🖥️ 工作台：**
 > 进入「映射」视图 → 上传原始文件（CSV/TSV）→ 每个文件卡片下拉选「目标域」→ 域选择网格勾选 → 点「映射」，结果区给出域 / 行数 / Issues 与产物清单。
@@ -259,7 +265,25 @@
 > 检查一下域之间的引用关系对不对，比如 USUBJID 父键、试验设计的手臂代码是不是都落在人口学域的手臂代码里。
 
 **助手会这样回（示意）：**
-> 跨域引用校验（共 15 条）：① [Pass] 所有域 USUBJID 均能在 DM 中找到父记录；② [Error] TA.ARMCD="ARM_C" 不在 DM.ARMCD 中；③ [Warning] VS.VISITNUM="99" 未在 TV 域声明；④ [Warning] AE.EPOCH="UNKNOWN_EPOCH" 未在 TA 域声明；⑤ [Error] RELREC.RDOMAIN="FAKE_DOMAIN" 引用不存在的域代码；⑥ [Pass] SUPPQUAL 引用完整；⑦ [Error] LB.STUDYID="OTHER" 与 DM 不一致；⑧ [Warning] LB.ARMCD="ARM_Z" 不在 DM.ARMCD 中；⑨ [Warning] VISITNUM=1 在不同域中 VISIT 描述不一致；⑩ [Notice] LB.EPOCH 含 TA 未出现的分期；⑪ [Warning] TA.TAETORD=3 映射到多个试验元素；⑫ [Warning] RELREC.IDVARVAL="99" 在父域中不存在；⑬ [Warning] SUPPQUAL 存在重复 (USUBJID, IDVARVAL, QNAM)；⑭ [Notice] DM.ARMCD=ARM_B 在 TA 中无对应条目；⑮ [Warning] VS.VISITNUM="99" 未在 TV 域声明。15 条规则覆盖受试者父键 / 域间枚举引用 / 关系域与补充限定符引用完整性 / 研究编号全局一致性 / 手臂代码全局子集 / 访视描述一致性 / 分期枚举一致性 / 试验设计域覆盖完整性 / 试验设计结构完整性。
+> 跨域引用校验（共 15 条）：
+>
+> 1. [Pass] 所有域 USUBJID 均能在 DM 中找到父记录；
+> 2. [Error] TA.ARMCD="ARM_C" 不在 DM.ARMCD 中；
+> 3. [Warning] VS.VISITNUM="99" 未在 TV 域声明；
+> 4. [Warning] AE.EPOCH="UNKNOWN_EPOCH" 未在 TA 域声明；
+> 5. [Error] RELREC.RDOMAIN="FAKE_DOMAIN" 引用不存在的域代码；
+> 6. [Pass] SUPPQUAL 引用完整；
+> 7. [Error] LB.STUDYID="OTHER" 与 DM 不一致；
+> 8. [Warning] LB.ARMCD="ARM_Z" 不在 DM.ARMCD 中；
+> 9. [Warning] VISITNUM=1 在不同域中 VISIT 描述不一致；
+> 10. [Notice] LB.EPOCH 含 TA 未出现的分期；
+> 11. [Warning] TA.TAETORD=3 映射到多个试验元素；
+> 12. [Warning] RELREC.IDVARVAL="99" 在父域中不存在；
+> 13. [Warning] SUPPQUAL 存在重复 (USUBJID, IDVARVAL, QNAM)；
+> 14. [Notice] DM.ARMCD=ARM_B 在 TA 中无对应条目；
+> 15. [Warning] VS.VISITNUM="99" 未在 TV 域声明。
+>
+> 15 条规则覆盖：受试者父键 / 域间枚举引用 / 关系域与补充限定符引用完整性 / 研究编号全局一致性 / 手臂代码全局子集 / 访视描述一致性 / 分期枚举一致性 / 试验设计域覆盖完整性 / 试验设计结构完整性。
 
 **🖥️ 工作台：**
 > 跨域引用是「合规检查」视图的检查项之一，上传多域数据集（DM + TA + TV + 子域 + RELREC）后一并产出。
@@ -281,7 +305,11 @@
 > 我们稽查要用 Pinnacle 21 跑一遍，你们能对齐它的口径吗？
 
 **助手会这样回（示意）：**
-> 可以。已按 Pinnacle 21 兼容口径执行规则校验：① SDTM 数据集规则（三机构严重级口径：FDA / PMDA / NMPA）；② Define-XML 元数据自检（定义与数据集对账，含已知偏差登记）；③ 五类规则统一登记（内置规则 / CORE / 自定义 / 数据集规则 / 定义文件规则并列），每条命中带规则编号与严重级，并按数据集汇总就绪度评分。
+> 可以。已按 Pinnacle 21 兼容口径执行规则校验：
+>
+> 1. SDTM 数据集规则——三机构严重级口径（FDA / PMDA / NMPA）；
+> 2. Define-XML 元数据自检——定义与数据集对账，含已知偏差登记；
+> 3. 五类规则统一登记——内置规则 / CORE / 自定义 / 数据集规则 / 定义文件规则并列，每条命中带规则编号与严重级，并按数据集汇总就绪度评分。
 
 **🖥️ 工作台：**
 > 「合规检查」视图即按统一规则集输出；Define-XML 自检随 define.xml 导出联动。
@@ -346,31 +374,47 @@
 ## 三、首次使用常见问题（FAQ）
 
 **Q：我没给映射规格，只有 EDC 导出的原始数据，能映射吗？**
-A：能。内置常见 EDC 列名别名表自动识别；列名差异较大的话，提供一份列名映射文件即可覆盖。
+A：能。分两种情况：
+
+- 常见 EDC 列名——内置别名表自动识别，直接映射；
+- 列名差异较大——提供一份列名映射文件覆盖「原始列 → SDTM 变量」即可。
 
 **Q：原始数据支持哪些格式？**
-A：CSV / TSV / Excel / SAS 数据集 / XPT / JSON 均可，自动按域识别并统一处理。网页方式上传目前读取 CSV/TSV 文本，其他格式请先在本地转换成 CSV，或经本地全功能方式处理。
+A：CSV / TSV / Excel / SAS 数据集 / XPT / JSON 均可，自动按域识别并统一处理。
+
+- 网页方式上传目前读取 CSV/TSV 文本；
+- 其他格式请先在本地转换成 CSV，或经本地全功能方式处理。
 
 **Q：预览的结果和正式映射一致吗？**
 A：一致——两者走同一处理路径，行数与 issue 数相同；区别只是预览不写文件。
 
 **Q：映射完成后，怎么拿到生成的文件？**
-A：本地方式下产物直接写入你指定的输出目录；网页方式下「映射」结果区即产物清单——各域数据集、issue 清单、定义文件与溯源文件都在里面，点「全部打包下载」即可取得压缩包，下载即取即走。
+A：按使用方式分两种：
+
+- 本地方式：产物直接写入你指定的输出目录；
+- 网页方式：「映射」结果区即产物清单——各域数据集、issue 清单、定义文件与溯源文件都在里面，点「全部打包下载」即可取得压缩包，下载即取即走。
 
 **Q：映射或校验结果能按我们的习惯调整吗？**
-A：两层可调：① 用列名映射文件覆盖「原始列 → SDTM 变量」的对应关系；② 用自定义规则包增删企业校验规则（保存前自检，不通过不启用）。
+A：两层可调：
+
+1. 用**列名映射文件**覆盖「原始列 → SDTM 变量」的对应关系；
+2. 用**自定义规则包**增删企业校验规则（保存前自检，不通过不启用）。
 
 **Q：中文环境下输出是中文吗？**
-A：对话语言跟随你的提问；数据集可输出中文变量标签列，Define-XML 支持双语标签。注意 XPT 传输格式只支持 ASCII 英文标签，中文标签体现在 Define-XML 双语字段中。
+A：分三层：
+
+1. 对话语言跟随你的提问；
+2. 数据集可输出中文变量标签列，Define-XML 支持双语标签；
+3. 注意：XPT 传输格式只支持 ASCII 英文标签，中文标签体现在 Define-XML 双语字段中。
 
 **Q：如果数据要保密怎么办？**
 A：用**本地全功能版**——零联网、数据不出域，受控术语本地内置，raw 数据与产物全程留在本机。
 
 **Q：产物可以直接用于监管递交吗？**
-A：XPT v5 + Define-XML v2.1 按可递交标准生成，但递交前须经贵方 QA 与统计编程审核；SDRG/ADRG 为草稿框架（填不了的显式标记 [TBC]），不定稿、不替代审核。
+A：分两部分：
 
-**Q：发现结果有误怎么办？**
-A：直接联系作者：medstatstar@gmail.com（张文彤 / Wintone Zhang）。
+1. XPT v5 + Define-XML v2.1 按可递交标准生成，但递交前须经贵方 QA 与统计编程审核；
+2. SDRG/ADRG 为草稿框架（填不了的显式标记 [TBC]），不定稿、不替代审核。
 
 ---
 

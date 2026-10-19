@@ -112,7 +112,13 @@ Grouped by usage scenario; every row includes a phrase you can **copy verbatim**
 > Map the clinical-trial raw data under data/raw into standard SDTM datasets.
 
 **Assistant replies (sketch):**
-> Read data/raw and identified 5 domains (DM / AE / LB / VS / EX); wrote sdtm_dm.csv (12 subjects), sdtm_ae.csv (38 adverse events), sdtm_lb.csv (156 rows), sdtm_vs.csv (84 rows), sdtm_ex.csv (60 rows). Three things happened automatically during mapping: ① value-level routing filled units (e.g., VSTESTCD=DIABP → VSSTRESU=mmHg); ② per-variable mapping provenance recorded (source column + rule ID); ③ compliance rule set ran, 2 issues total. No Errors — ready for downstream ct-adam.
+> Read data/raw and identified 5 domains (DM / AE / LB / VS / EX); wrote sdtm_dm.csv (12 subjects), sdtm_ae.csv (38 adverse events), sdtm_lb.csv (156 rows), sdtm_vs.csv (84 rows), sdtm_ex.csv (60 rows). Three things happened automatically during mapping:
+>
+> 1. Value-level routing filled units (e.g., VSTESTCD=DIABP → VSSTRESU=mmHg);
+> 2. Per-variable mapping provenance recorded (source column + rule ID);
+> 3. Compliance rule set ran, 2 issues total.
+>
+> No Errors — ready for downstream ct-adam.
 
 **🖥️ Workbench:**
 > Open the "Mapping" view → upload raw files (CSV/TSV) → pick "Target domain" on each file card → tick the domain grid → click "Map"; the results panel shows domain / rows / Issues and the artifact list.
@@ -259,7 +265,25 @@ Grouped by usage scenario; every row includes a phrase you can **copy verbatim**
 > Check cross-domain references — e.g., USUBJID parent keys, and whether TA arm codes all fall inside DM's ARMCD.
 
 **Assistant replies (sketch):**
-> Cross-domain reference validation (15 rules): ① [Pass] all domains' USUBJID have parent records in DM; ② [Error] TA.ARMCD="ARM_C" not in DM.ARMCD; ③ [Warning] VS.VISITNUM="99" not declared in TV; ④ [Warning] AE.EPOCH="UNKNOWN_EPOCH" not declared in TA; ⑤ [Error] RELREC.RDOMAIN="FAKE_DOMAIN" references a non-existent domain code; ⑥ [Pass] SUPPQUAL references complete; ⑦ [Error] LB.STUDYID="OTHER" inconsistent with DM; ⑧ [Warning] LB.ARMCD="ARM_Z" not in DM.ARMCD; ⑨ [Warning] VISIT descriptions for VISITNUM=1 inconsistent across domains; ⑩ [Notice] LB.EPOCH contains an epoch absent from TA; ⑪ [Warning] TA.TAETORD=3 maps to multiple ELEMENTs; ⑫ [Warning] RELREC.IDVARVAL="99" absent from the parent domain; ⑬ [Warning] SUPPQUAL has duplicate (USUBJID, IDVARVAL, QNAM); ⑭ [Notice] DM.ARMCD=ARM_B has no TA counterpart; ⑮ [Warning] VS.VISITNUM="99" not declared in TV. The 15 rules cover subject parent keys / inter-domain enumeration references / relationship-domain and SUPPQUAL reference integrity / STUDYID global consistency / ARMCD global subset / VISIT description consistency / EPOCH enumeration consistency / TV coverage completeness / TA structural integrity.
+> Cross-domain reference validation (15 rules):
+>
+> 1. [Pass] all domains' USUBJID have parent records in DM;
+> 2. [Error] TA.ARMCD="ARM_C" not in DM.ARMCD;
+> 3. [Warning] VS.VISITNUM="99" not declared in TV;
+> 4. [Warning] AE.EPOCH="UNKNOWN_EPOCH" not declared in TA;
+> 5. [Error] RELREC.RDOMAIN="FAKE_DOMAIN" references a non-existent domain code;
+> 6. [Pass] SUPPQUAL references complete;
+> 7. [Error] LB.STUDYID="OTHER" inconsistent with DM;
+> 8. [Warning] LB.ARMCD="ARM_Z" not in DM.ARMCD;
+> 9. [Warning] VISIT descriptions for VISITNUM=1 inconsistent across domains;
+> 10. [Notice] LB.EPOCH contains an epoch absent from TA;
+> 11. [Warning] TA.TAETORD=3 maps to multiple ELEMENTs;
+> 12. [Warning] RELREC.IDVARVAL="99" absent from the parent domain;
+> 13. [Warning] SUPPQUAL has duplicate (USUBJID, IDVARVAL, QNAM);
+> 14. [Notice] DM.ARMCD=ARM_B has no TA counterpart;
+> 15. [Warning] VS.VISITNUM="99" not declared in TV.
+>
+> The 15 rules cover: subject parent keys / inter-domain enumeration references / relationship-domain and SUPPQUAL reference integrity / STUDYID global consistency / ARMCD global subset / VISIT description consistency / EPOCH enumeration consistency / TV coverage completeness / TA structural integrity.
 
 **🖥️ Workbench:**
 > Cross-domain references are part of the "Compliance Check" view; upload multiple domains (DM + TA + TV + child domains + RELREC) and all rules run together.
@@ -281,7 +305,11 @@ Grouped by usage scenario; every row includes a phrase you can **copy verbatim**
 > Our auditors run everything through Pinnacle 21 — can you align with its conventions?
 
 **Assistant replies (sketch):**
-> Yes. P21-compatible rule validation executed: ① SDTM dataset rules (three-agency severity: FDA / PMDA / NMPA); ② Define-XML metadata self-check (definition vs. dataset reconciliation, with a known-deviation register); ③ five rule tracks registered uniformly (built-in / CORE / custom / dataset rules / definition rules side by side), every hit carrying a rule ID and severity, with per-dataset readiness scoring.
+> Yes. P21-compatible rule validation executed:
+>
+> 1. SDTM dataset rules — three-agency severity (FDA / PMDA / NMPA);
+> 2. Define-XML metadata self-check — definition vs. dataset reconciliation, with a known-deviation register;
+> 3. Five rule tracks registered uniformly — built-in / CORE / custom / dataset rules / definition rules side by side, every hit carrying a rule ID and severity, with per-dataset readiness scoring.
 
 **🖥️ Workbench:**
 > The "Compliance Check" view outputs the unified rule set; Define-XML self-check runs alongside define.xml export.
@@ -346,31 +374,47 @@ Grouped by usage scenario; every row includes a phrase you can **copy verbatim**
 ## 3. First-Time FAQ
 
 **Q: I have no mapping spec — just EDC exports. Can it still map?**
-A: Yes. A built-in alias table recognizes common EDC column names; for larger differences, provide a column-map file to override.
+A: Yes. Two cases:
+
+- Common EDC column names — a built-in alias table recognizes them automatically;
+- Larger differences — provide a column-map file to override the "raw column → SDTM variable" correspondence.
 
 **Q: What raw-data formats are supported?**
-A: CSV / TSV / Excel / SAS datasets / XPT / JSON are all supported, with per-domain auto-detection and normalization. Web uploads currently read CSV/TSV text — for other formats, convert to CSV locally first or use the local full-featured edition.
+A: CSV / TSV / Excel / SAS datasets / XPT / JSON are all supported, with per-domain auto-detection and normalization.
+
+- Web uploads currently read CSV/TSV text;
+- For other formats, convert to CSV locally first or use the local full-featured edition.
 
 **Q: Do preview and real mapping agree?**
 A: Yes — they run the same code path, so row and issue counts are identical; the only difference is that preview writes no files.
 
 **Q: Once mapping finishes, how do I get the generated files?**
-A: Locally, artifacts are written directly to your chosen output directory. On the web, the "Mapping" results panel *is* the artifact list — per-domain datasets, issue list, definition files, and provenance files are all there; click "Download all as ZIP" to fetch the archive.
+A: Depends on how you use the skill:
+
+- Local edition: artifacts are written directly to your chosen output directory;
+- Web edition: the "Mapping" results panel *is* the artifact list — per-domain datasets, issue list, definition files, and provenance files are all there; click "Download all as ZIP" to fetch the archive.
 
 **Q: Can mapping or validation results be adjusted to our conventions?**
-A: Two layers: ① a column-map file overrides the "raw column → SDTM variable" correspondence; ② a custom rule pack adds/removes enterprise validation rules (self-checked before save; not enabled if it fails).
+A: Two layers:
+
+1. A **column-map file** overrides the "raw column → SDTM variable" correspondence;
+2. A **custom rule pack** adds/removes enterprise validation rules (self-checked before save; not enabled if it fails).
 
 **Q: Is the output Chinese in a Chinese environment?**
-A: Conversation language follows your question; datasets can carry Chinese variable-label columns and Define-XML supports bilingual labels. Note that the XPT transport format only supports ASCII English labels — Chinese labels live in Define-XML bilingual fields.
+A: Three points:
+
+1. Conversation language follows your question;
+2. Datasets can carry Chinese variable-label columns, and Define-XML supports bilingual labels;
+3. Note: the XPT transport format only supports ASCII English labels — Chinese labels live in Define-XML bilingual fields.
 
 **Q: What if my data must stay confidential?**
 A: Use the **local full-featured edition** — zero network, no egress; controlled terminology is bundled locally and raw data plus all artifacts stay on your machine.
 
 **Q: Can the output be used directly for regulatory submission?**
-A: XPT v5 + Define-XML v2.1 are generated to submission standards, but must still pass your QA and statistical-programming review before submission; SDRG/ADRG outputs are draft frameworks (unfillable items explicitly marked [TBC]) — never final, never a substitute for review.
+A: Two parts:
 
-**Q: What if I find an error in the results?**
-A: Contact the author directly: medstatstar@gmail.com (Wintone Zhang / 张文彤).
+1. XPT v5 + Define-XML v2.1 are generated to submission standards, but must still pass your QA and statistical-programming review before submission;
+2. SDRG/ADRG outputs are draft frameworks (unfillable items explicitly marked [TBC]) — never final, never a substitute for review.
 
 ---
 
