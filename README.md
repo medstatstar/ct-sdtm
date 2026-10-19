@@ -374,33 +374,39 @@ Grouped by usage scenario; every row includes a phrase you can **copy verbatim**
 ## 3. First-Time FAQ
 
 **Q: I have no mapping spec — just EDC exports. Can it still map?**
+
 A: Yes. Two cases:
 
 - Common EDC column names — a built-in alias table recognizes them automatically;
 - Larger differences — provide a column-map file to override the "raw column → SDTM variable" correspondence.
 
 **Q: What raw-data formats are supported?**
+
 A: CSV / TSV / Excel / SAS datasets / XPT / JSON are all supported, with per-domain auto-detection and normalization.
 
 - Web uploads currently read CSV/TSV text;
 - For other formats, convert to CSV locally first or use the local full-featured edition.
 
 **Q: Do preview and real mapping agree?**
+
 A: Yes — they run the same code path, so row and issue counts are identical; the only difference is that preview writes no files.
 
 **Q: Once mapping finishes, how do I get the generated files?**
+
 A: Depends on how you use the skill:
 
 - Local edition: artifacts are written directly to your chosen output directory;
 - Web edition: the "Mapping" results panel *is* the artifact list — per-domain datasets, issue list, definition files, and provenance files are all there; click "Download all as ZIP" to fetch the archive.
 
 **Q: Can mapping or validation results be adjusted to our conventions?**
+
 A: Two layers:
 
 1. A **column-map file** overrides the "raw column → SDTM variable" correspondence;
 2. A **custom rule pack** adds/removes enterprise validation rules (self-checked before save; not enabled if it fails).
 
 **Q: Is the output Chinese in a Chinese environment?**
+
 A: Three points:
 
 1. Conversation language follows your question;
@@ -408,9 +414,11 @@ A: Three points:
 3. Note: the XPT transport format only supports ASCII English labels — Chinese labels live in Define-XML bilingual fields.
 
 **Q: What if my data must stay confidential?**
+
 A: Use the **local full-featured edition** — zero network, no egress; controlled terminology is bundled locally and raw data plus all artifacts stay on your machine.
 
 **Q: Can the output be used directly for regulatory submission?**
+
 A: Two parts:
 
 1. XPT v5 + Define-XML v2.1 are generated to submission standards, but must still pass your QA and statistical-programming review before submission;
