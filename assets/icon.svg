@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 104 104" width="100%">
+  <defs>
+    <!-- ct-* 系列通用：圆弧角方框柔和投影（B 档深橙主色 #E8770B，ct-base §12） -->
+    <filter id="logoShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="2.5" stdDeviation="2.5" flood-color="#E8770B" flood-opacity="0.30"/>
+    </filter>
+    <!-- 箭头改用 A 档靛蓝 #3A5BC7（用户指定），箭头整体缩小 -->
+    <marker id="arw" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#3A5BC7"/>
+    </marker>
+  </defs>
+
+  <!-- ② 整体圆弧角方框（含柔和投影）—— B 档：底 #EEEDFE，描边用主色淡色调 #FBE2BC（§12 两档表，描边宽度按 §12.2 保持 0.5） -->
+  <rect x="-52" y="-52" width="104" height="104" rx="20" fill="#EEEDFE" stroke="#FBE2BC" stroke-width="0.5" transform="translate(52,52)" filter="url(#logoShadow)"/>
+
+  <!-- ① 左上角统一文字（ct-* 系列通用，B 档主色 #E8770B） -->
+  <g transform="translate(7,13)">
+    <text font-family="'Arial Black','Helvetica Neue',Arial,sans-serif" font-size="16" font-weight="900" font-style="italic" fill="#E8770B" stroke="#E8770B" stroke-width="0.25" paint-order="stroke" stroke-linejoin="round">Clinical</text>
+    <text y="12" font-family="'Arial Black','Helvetica Neue',Arial,sans-serif" font-size="16" font-weight="900" font-style="italic" fill="#E8770B" stroke="#E8770B" stroke-width="0.25" paint-order="stroke" stroke-linejoin="round">Trial</text>
+  </g>
+
+  <!-- RAW 源数据表（放大·左右拉开·再下移并拉长）：白色虚线方框 + 松散网格（淡紫 #AFA9EC，非主色）→ 未标准化原始数据；边框加粗至 3px -->
+  <g>
+    <rect x="10" y="38" width="33" height="54" rx="2" fill="#FFFFFF" stroke="#AFA9EC" stroke-width="3" stroke-dasharray="5 3"/>
+    <g stroke="#AFA9EC" stroke-width="1.6">
+      <line x1="10" y1="56" x2="43" y2="56"/>
+      <line x1="10" y1="74" x2="43" y2="74"/>
+      <line x1="26.5" y1="38" x2="26.5" y2="92"/>
+    </g>
+  </g>
+
+  <!-- 标准化箭头（A 档靛蓝 #3A5BC7，缩小：2.4px 描边 + 小箭头；随表下移并对齐表中心，左偏靠近 RAW 表，仍指向 SDTM） -->
+  <g fill="none" stroke="#3A5BC7" stroke-width="2.4" stroke-linecap="round" marker-end="url(#arw)">
+    <path d="M44 65 L54 65"/>
+  </g>
+
+  <!-- SDTM 标准结构表（放大·左右拉开·再下移并拉长）：实线橙框（加粗至 4px）+ 实心橙表头（标准变量域）+ 对齐行网格（mint #9FE1CB） -->
+  <g>
+    <rect x="61" y="38" width="33" height="54" rx="2" fill="#EEEDFE" stroke="#E8770B" stroke-width="4"/>
+    <rect x="61" y="38" width="33" height="13" rx="2" fill="#E8770B"/>
+    <g stroke="#9FE1CB" stroke-width="1.8">
+      <line x1="61" y1="64" x2="94" y2="64"/>
+      <line x1="61" y1="78" x2="94" y2="78"/>
+      <line x1="77.5" y1="51" x2="77.5" y2="92"/>
+    </g>
+  </g>
+</svg>
